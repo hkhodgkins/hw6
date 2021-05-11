@@ -35,9 +35,23 @@ exports.handler = async function(event) {
     }
 
     for (let i=0; i < moviesFromCsv.length; i++) {
-
+      // store movies in memory
+      let movie = moviesFromCsv[i]
+      // require developor to pass two querystring parameters and filter for these parameters: year "startYear" and genre "genre"
+      if (movie.startYear == year && movie.genres.includes(genre) && movie.runtimeMinutes != `\\N` && movie.genres != `\\N`) {
+        movie = {
+          title: movie.primaryTitle,
+          year: movie.startYear,
+          genres: movie.genres
+        }
+        // add movie to list of results
+        returnValue.movies.push(movie)
+      }
     }
 
+    // measure length of array to be captured by "numResults"
+    returnValue.numresults = returnValue.movies.length
+    
     // a lambda function returns a status code and a string of data
     return {
       statusCode: 200, // https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
